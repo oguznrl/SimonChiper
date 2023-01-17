@@ -22,20 +22,20 @@
 
 module simon(clk,rstn,key,input_text,chipher_text,valid);
 input  clk,rstn;
-input  [31:0] key;
-input  [63:0]input_text;
-output reg [63:0]chipher_text;
+input  [15:0] key;
+input  [31:0]input_text;
+output reg [31:0]chipher_text;
 output reg valid;
 
-wire [31:0]left_side=input_text[63:32];
-wire [31:0]right_side=input_text[31:0];
-wire [31:0]rl_1={left_side[30:0],left_side[31]};
-wire [31:0]rl_8={left_side[23:0],left_side[31:24]};
-wire [31:0]rl_2={left_side[29:0],left_side[31:30]};
-wire [31:0]rl_1_and_rl_8=rl_1 & rl_8;
-wire [31:0]rl_1_and_rl_8_xor_right_side=rl_1_and_rl_8 ^right_side;
-wire [31:0]rl_1_and_rl_8_xor_right_side_xor_rl2=rl_1_and_rl_8_xor_right_side ^ rl_2;
-wire [31:0] new_left=rl_1_and_rl_8_xor_right_side_xor_rl2 ^ key;
+wire [15:0]left_side=input_text[31:16];
+wire [15:0]right_side=input_text[15:0];
+wire [15:0]rl_1={left_side[14:0],left_side[15]};
+wire [15:0]rl_8={left_side[7:0],left_side[15:8]};
+wire [15:0]rl_2={left_side[13:0],left_side[15:14]};
+wire [15:0]rl_1_and_rl_8=rl_1 & rl_8;
+wire [15:0]rl_1_and_rl_8_xor_right_side=rl_1_and_rl_8 ^right_side;
+wire [15:0]rl_1_and_rl_8_xor_right_side_xor_rl2=rl_1_and_rl_8_xor_right_side ^ rl_2;
+wire [15:0] new_left=rl_1_and_rl_8_xor_right_side_xor_rl2 ^ key;
 always @(posedge clk) begin
     if (rstn!='b0) begin
         chipher_text<={new_left,left_side};
